@@ -1,0 +1,31 @@
+﻿@page
+@model QuangPhuWebRazor.Pages.Categories.DeleteModel
+@{
+}
+
+<form method="post">
+    <input asp-for="category.Id" hidden />
+    <div class="border p-3 mt-4">
+        <div class="row">
+            <h2 class="text-primary">Delete Category</h2>
+            <hr />
+        </div>
+        <div class="mb-3">
+            <label asp-for="category.Name"></label>
+            <input asp-for="category.Name" disabled class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label asp-for="category.DisplayOrder"></label>
+            <input asp-for="category.DisplayOrder" disabled class="form-control" />
+
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </div>
+            <div class="col-6">
+                <a asp-page="/categories/index" class="btn btn-outline-secondary">Back to list</a>
+            </div>
+        </div>
+    </div>
+</form>

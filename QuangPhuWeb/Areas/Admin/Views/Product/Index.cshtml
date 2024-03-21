@@ -1,0 +1,69 @@
+﻿@{
+    ViewData["Title"] = "Product";
+}
+@model List<Product>
+
+<div class="container">
+    <div class="row pt-4 pb-3">
+        <div class="col-6">
+            <h2>Product List</h2>
+        </div>
+        <div class="col-6 text-end ">
+            <a asp-controller="product" asp-action="upsert" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Create new product
+            </a>
+        </div>
+    </div>
+</div>
+<table id="tblData" class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>
+                Title
+            </th>
+            <th>
+                ISBN
+            </th>
+            <th>
+                Price
+            </th>
+            <th>
+                Author
+            </th>
+            <th>
+                Category
+            </th>
+            <th>#</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var product in Model)
+        {
+            <tr>
+                <td>@product.Title</td>
+                <td>@product.Description</td>
+                <td>@product.ISBN</td>
+                <td>@product.Author</td>
+                <td>@product.Price</td>
+                <td>@product.Category.Name</td>
+
+                <td>
+                    <div class="w-50 btn-group" role="group">
+                        <a asp-controller="product" asp-action="upsert" asp-route-id="@product.Id" class="btn btn-primary">
+                            <i class="bi bi-pencil-square"></i> Edit
+                        </a>
+                        <a asp-controller="product" asp-action="delete" asp-route-id="@product.Id" class="btn btn-danger">
+                            <i class="bi bi-trash3"></i> Delete
+                        </a>
+                    </div>
+                </td>
+            </tr>
+
+        }
+
+    </tbody>
+
+</table>
+@section Scripts{
+    <script src="~/js/product.js"></script>
+}
