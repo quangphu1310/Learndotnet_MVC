@@ -11,6 +11,7 @@ namespace QuangPhu.DataAccess.Data
         public DbSet<Category> Categories { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+        public DbSet<Company> Companys { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -104,6 +105,38 @@ namespace QuangPhu.DataAccess.Data
                     ImageUrl = ""
                 }
                 );
+            modelBuilder.Entity<Company>().HasData(
+                new Company
+                {
+                    Id = 2,
+                    Name = "ABC Company",
+                    StreetAdress = "123 Main Street",
+                    City = "New York City",
+                    State = "New York",
+                    PostalCode = "12345",
+                    PhoneNumber = "555-123-4567"
+                },
+                new Company
+                {
+                    Id = 3,
+                    Name = "XYZ Company",
+                    StreetAdress = "456 Elm Street",
+                    City = "Los Angeles",
+                    State = "California",
+                    PostalCode = "67890",
+                    PhoneNumber = "555-987-6543"
+                },
+                new Company
+                {
+                    Id = 4,
+                    Name = "123 Company",
+                    StreetAdress = "789 Oak Street",
+                    City = "Chicago",
+                    State = "Illinois",
+                    PostalCode = "54321",
+                    PhoneNumber = "555-456-7890"
+                }
+            );
         }
     }
 }

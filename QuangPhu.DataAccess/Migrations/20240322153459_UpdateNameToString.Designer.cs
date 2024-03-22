@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using QuangPhu.DataAccess.Data;
 
@@ -11,9 +12,11 @@ using QuangPhu.DataAccess.Data;
 namespace QuangPhu.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240322153459_UpdateNameToString")]
+    partial class UpdateNameToString
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -270,70 +273,6 @@ namespace QuangPhu.DataAccess.Migrations
                         });
                 });
 
-            modelBuilder.Entity("QuangPhu.Models.Company", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("City")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PostalCode")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("State")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("StreetAdress")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Companys");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 2,
-                            City = "New York City",
-                            Name = "ABC Company",
-                            PhoneNumber = "555-123-4567",
-                            PostalCode = "12345",
-                            State = "New York",
-                            StreetAdress = "123 Main Street"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            City = "Los Angeles",
-                            Name = "XYZ Company",
-                            PhoneNumber = "555-987-6543",
-                            PostalCode = "67890",
-                            State = "California",
-                            StreetAdress = "456 Elm Street"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            City = "Chicago",
-                            Name = "123 Company",
-                            PhoneNumber = "555-456-7890",
-                            PostalCode = "54321",
-                            State = "Illinois",
-                            StreetAdress = "789 Oak Street"
-                        });
-                });
-
             modelBuilder.Entity("QuangPhu.Models.Product", b =>
                 {
                     b.Property<int>("Id")
@@ -477,9 +416,6 @@ namespace QuangPhu.DataAccess.Migrations
                     b.Property<string>("City")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("CompanyId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -492,8 +428,6 @@ namespace QuangPhu.DataAccess.Migrations
 
                     b.Property<string>("StreetAddress")
                         .HasColumnType("nvarchar(max)");
-
-                    b.HasIndex("CompanyId");
 
                     b.HasDiscriminator().HasValue("ApplicationUser");
                 });
@@ -558,15 +492,6 @@ namespace QuangPhu.DataAccess.Migrations
                         .IsRequired();
 
                     b.Navigation("Category");
-                });
-
-            modelBuilder.Entity("QuangPhu.Models.ApplicationUser", b =>
-                {
-                    b.HasOne("QuangPhu.Models.Company", "Company")
-                        .WithMany()
-                        .HasForeignKey("CompanyId");
-
-                    b.Navigation("Company");
                 });
 #pragma warning restore 612, 618
         }
