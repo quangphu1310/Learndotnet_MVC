@@ -1,7 +1,9 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using QuangPhu.DataAccess.Repository.IRepository;
 using QuangPhu.Models;
 using System.Diagnostics;
+using System.Security.Claims;
 
 namespace QuangPhuWeb.Areas.Customer.Controllers
 {
@@ -24,10 +26,37 @@ namespace QuangPhuWeb.Areas.Customer.Controllers
 
             return View(objProductList);
         }
-        public IActionResult Details(int id)
+        public IActionResult Details(int productId)
         {
-            var product = _unitOfWork.Product.Get(x  => x.Id == id, includeProperties: "Category");
-            return View(product);
+            ShoppingCart cart = new() {
+                Product = _unitOfWork.Product.Get(x => x.Id == productId, includeProperties: "Category"),
+                Count = 1,
+                ProductId = productId
+            };
+            return View(cart);
+        }
+        [HttpPost]
+        [Authorize]
+        public IActionResult Details(ShoppingCart shoppingCart)
+        {
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+            shoppingCart.ApplicationUserId = userId;
+
+            var cartFromDb = _unitOfWork.ShoppingCart.Get(x => x.ApplicationUserId == userId &&
+                x.ProductId == shoppingCart.ProductId);
+            if(cartFromDb != null)
+            {
+                cartFromDb.Count += shoppingCart.Count;
+                _unitOfWork.ShoppingCart.Update(cartFromDb);
+            }
+            else
+            {
+                _unitOfWork.ShoppingCart.Add(shoppingCart);
+
+            }
+            _unitOfWork.Save();
+            return RedirectToAction("Index");
         }
 
         public IActionResult Privacy()
