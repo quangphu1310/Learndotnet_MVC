@@ -24,12 +24,13 @@ namespace QuangPhuWeb.Areas.Customer.Controllers
 
             ShoppingCartVM = new (){
                 ShoppingCartList = _unitofWork.ShoppingCart.GetAll(x => x.ApplicationUserId == userId, includeProperties: "Product"),
+                OrderHeader = new()
             };
 
             foreach( var cart in ShoppingCartVM.ShoppingCartList )
             {
                 cart.Price = GetCartPrice(cart);
-                ShoppingCartVM.OrderTotal += cart.Price * cart.Count;
+                ShoppingCartVM.OrderHeader.OrderTotal += cart.Price * cart.Count;
             }
             return View(ShoppingCartVM);
         }
@@ -66,7 +67,28 @@ namespace QuangPhuWeb.Areas.Customer.Controllers
         }
         public IActionResult Summary() 
         {
-            return View();
+            var claimIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimIdentity.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            ShoppingCartVM = new()
+            {
+                ShoppingCartList = _unitofWork.ShoppingCart.GetAll(x => x.ApplicationUserId == userId, includeProperties: "Product"),
+                OrderHeader = new()
+            };
+            ShoppingCartVM.OrderHeader.ApplicationUser = _unitofWork.ApplicationUser.Get(x=>x.Id== userId);
+            ShoppingCartVM.OrderHeader.Name = ShoppingCartVM.OrderHeader.ApplicationUser.Name;
+            ShoppingCartVM.OrderHeader.PhoneNumber = ShoppingCartVM.OrderHeader.ApplicationUser.PhoneNumber;
+            ShoppingCartVM.OrderHeader.StreetAddress = ShoppingCartVM.OrderHeader.ApplicationUser.StreetAddress;
+            ShoppingCartVM.OrderHeader.City = ShoppingCartVM.OrderHeader.ApplicationUser.City;
+            ShoppingCartVM.OrderHeader.State = ShoppingCartVM.OrderHeader.ApplicationUser.State;
+            ShoppingCartVM.OrderHeader.PostalCode = ShoppingCartVM.OrderHeader.ApplicationUser.PostalCode;
+
+            foreach (var cart in ShoppingCartVM.ShoppingCartList)
+            {
+                cart.Price = GetCartPrice(cart);
+                ShoppingCartVM.OrderHeader.OrderTotal += cart.Price * cart.Count;
+            }
+            return View(ShoppingCartVM);
         }
     }
 }
