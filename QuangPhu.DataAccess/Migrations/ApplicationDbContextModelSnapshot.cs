@@ -415,6 +415,9 @@ namespace QuangPhu.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("SessionId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateOnly>("ShippingDate")
                         .HasColumnType("date");
 
