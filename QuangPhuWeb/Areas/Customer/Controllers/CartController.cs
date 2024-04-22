@@ -177,6 +177,23 @@ namespace QuangPhuWeb.Areas.Customer.Controllers
 		}
         public IActionResult OrderConfirmation(int id)
         {
+            OrderHeader orderHeader = _unitofWork.OrderHeader.Get(x => x.Id ==  id, includeProperties: "ApplicationUser");
+            if(orderHeader.PaymentStatus != SD.PaymentStatusDelayedPayment)
+            {
+                var service = new SessionService();
+                Session session = service.Get(orderHeader.SessionId);
+                if(session.PaymentStatus.ToLower() == "paid")
+                {
+                    _unitofWork.OrderHeader.UpdateStripePaymentID(id, session.Id, session.PaymentIntentId);
+                    _unitofWork.OrderHeader.UpdateStatus(id, SD.StatusApproved, SD.PaymentStatusApproved);
+                    _unitofWork.Save();
+                }
+
+            }
+            List<ShoppingCart> shoppingCart = _unitofWork.ShoppingCart
+                .GetAll(x => x.ApplicationUserId == orderHeader.ApplicationUserId).ToList();
+            _unitofWork.ShoppingCart.RemoveRange(shoppingCart);
+            _unitofWork.Save();
             return View(id);
         }
 	}
