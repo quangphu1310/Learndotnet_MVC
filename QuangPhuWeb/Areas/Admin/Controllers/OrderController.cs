@@ -36,6 +36,15 @@ namespace QuangPhuWeb.Areas.Admin.Controllers
             }
             return View(objOrderHeaders);
         }
+        public IActionResult Details(int? orderId)
+        {
+            OrderVM orderVM = new OrderVM()
+            {
+                OrderHeader = _unitOfWork.OrderHeader.Get(x => x.Id == orderId, includeProperties: "ApplicationUser"),
+                OrderDetail = _unitOfWork.OrderDetail.GetAll(x => x.OrderHeaderId ==  orderId, includeProperties: "Product").ToList()
+            };
+            return View(orderVM);
+        }
 
 
 
