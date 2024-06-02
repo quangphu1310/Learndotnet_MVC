@@ -6,6 +6,7 @@ using QuangPhu.Models.ViewModels;
 using QuangPhu.Utility;
 using Microsoft.AspNetCore.Hosting;
 using System.Diagnostics;
+using System.Security.Claims;
 namespace QuangPhuWeb.Areas.Admin.Controllers
 {
     [Area("Admin")]
@@ -21,7 +22,17 @@ namespace QuangPhuWeb.Areas.Admin.Controllers
         }
         public IActionResult Index(string status)
         {
-            List<OrderHeader> objOrderHeaders = _unitOfWork.OrderHeader.GetAll(includeProperties: "ApplicationUser").ToList();
+            List<OrderHeader> objOrderHeaders;
+            if(User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
+            {
+                objOrderHeaders = _unitOfWork.OrderHeader.GetAll(includeProperties: "ApplicationUser").ToList();
+            }
+            else
+            {
+                var claimsIdentity = (ClaimsIdentity)User.Identity;
+                var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+                objOrderHeaders = _unitOfWork.OrderHeader.GetAll(u => u.ApplicationUserId == userId, includeProperties: "ApplicationUser").ToList();
+            }
             switch (status)
             {
                 case "pending":
