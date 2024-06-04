@@ -139,7 +139,6 @@ namespace QuangPhuWeb.Areas.Customer.Controllers
             }
             if (applicationUser.CompanyId.GetValueOrDefault() == 0)
             {
-
                 var domain = "https://localhost:7147/";
                 var options = new Stripe.Checkout.SessionCreateOptions
                 {
