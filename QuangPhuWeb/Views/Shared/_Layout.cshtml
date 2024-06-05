@@ -25,13 +25,13 @@
                         <li class="nav-item">
                             <a class="nav-link" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                       
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="Admin" asp-controller="Order" asp-action="Index">Manage Order</a>
+                        </li>
                         
-                        @* @if (User.IsInRole(SD.Role_Admin))
-                        { *@
-                            <li class="nav-item">
-                                <a class="nav-link" asp-area="Admin" asp-controller="Order" asp-action="Index">Manage Order</a>
-                            </li>
+                        @if (User.IsInRole(SD.Role_Admin))
+                        {
+                            
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     Context Management
@@ -48,12 +48,28 @@
 
                                 </ul>
                             </li>
-                        @* } *@
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Cart" asp-action="Index">
-                                <i class="bi bi-cart"></i> &nbsp; (0)
-                            </a>
-                        </li>
+                        }
+                        @if (Context.Session.GetInt32(SD.SessionCart) != null)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Cart" asp-action="Index">
+                                    <i class="bi bi-cart"></i>
+                                    (@(Context.Session.GetInt32(SD.SessionCart)))
+                                </a>
+                            </li>
+                        }
+                        else
+                        {
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-area="" asp-controller="Cart" asp-action="Index">
+                                        <i class="bi bi-cart"></i>
+                                        (0)
+                                    </a>
+                                </li>
+                            }
+                        }
+
                     </ul>
                     <partial name="_LoginPartial"/>
                 </div>

@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using QuangPhu.DataAccess.Repository.IRepository;
 using QuangPhu.Models;
+using QuangPhu.Utility;
 using System.Diagnostics;
 using System.Security.Claims;
 
@@ -49,13 +51,16 @@ namespace QuangPhuWeb.Areas.Customer.Controllers
             {
                 cartFromDb.Count += shoppingCart.Count;
                 _unitOfWork.ShoppingCart.Update(cartFromDb);
+                _unitOfWork.Save();
             }
             else
             {
                 _unitOfWork.ShoppingCart.Add(shoppingCart);
-
+                _unitOfWork.Save();
+                HttpContext.Session.SetInt32(SD.SessionCart,
+                    _unitOfWork.ShoppingCart.GetAll(x=> x.ApplicationUserId == userId).Count());
             }
-            _unitOfWork.Save();
+           
             return RedirectToAction("Index","Cart");
         }
 

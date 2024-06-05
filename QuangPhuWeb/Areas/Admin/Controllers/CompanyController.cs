@@ -1,13 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using QuangPhu.DataAccess.Repository.IRepository;
 using QuangPhu.Models;
 using QuangPhu.Models.ViewModels;
+using QuangPhu.Utility;
 using System.ComponentModel.Design;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace QuangPhuWeb.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = SD.Role_Admin)]
 
     public class CompanyController : Controller
     {
