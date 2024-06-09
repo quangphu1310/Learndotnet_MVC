@@ -43,35 +43,22 @@
                                     <li class="nav-item">
                                         <a class="dropdown-item" asp-area="Admin" asp-controller="Category" asp-action="Index">Category</a>
                                     </li>
-                                    <li><hr class="dropdown-divider"></li>
 
                                     <li class="nav-item">
                                         <a class="dropdown-item" asp-area="Admin" asp-controller="Product" asp-action="Index">Product</a>
                                     </li>
+                                    <li class="nav-item">
+                                        <a class="dropdown-item" asp-area="Admin" asp-controller="Company" asp-action="Index">Company</a>
+                                    </li>
+                                    <li><hr class="dropdown-divider"></li>
 
+                                    <li class="nav-item">
+                                        <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Register">Create User</a>
+                                    </li>
                                 </ul>
                             </li>
                         }
-                       @*  @if (Context.Session.GetInt32(SD.SessionCart) != null)
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link" asp-area="" asp-controller="Cart" asp-action="Index">
-                                    <i class="bi bi-cart"></i>
-                                    (@(Context.Session.GetInt32(SD.SessionCart)))
-                                </a>
-                            </li>
-                        }
-                        else
-                        {
-                            {
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-area="" asp-controller="Cart" asp-action="Index">
-                                        <i class="bi bi-cart"></i>
-                                        (0)
-                                    </a>
-                                </li>
-                            }
-                        } *@
+                       
                        
                             <li class="nav-item">
                                 <a class="nav-link" asp-area="Customer" asp-controller="Cart" asp-action="Index">
