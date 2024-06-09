@@ -22,17 +22,19 @@ builder.Services.ConfigureApplicationCookie(option =>
         option.LogoutPath = $"/Identity/Account/Logout";
         option.AccessDeniedPath = $"/Identity/Account/AccessDenied";
     });
+
+
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options => {
+    options.IdleTimeout = TimeSpan.FromMinutes(100);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
 builder.Services.AddRazorPages();
 
-builder.Services.AddDistributedMemoryCache();
-builder.Services.AddSession(o =>
-{
-    o.IdleTimeout = TimeSpan.FromMinutes(100);
-    o.Cookie.HttpOnly = true;
-    o.Cookie.IsEssential = true;
-});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using QuangPhu.DataAccess.Repository;
 using QuangPhu.DataAccess.Repository.IRepository;
 using QuangPhu.Models;
 using QuangPhu.Models.ViewModels;
@@ -55,15 +56,28 @@ namespace QuangPhuWeb.Areas.Customer.Controllers
         }
         public IActionResult minus(int cartID)
         {
-            var cart = _unitofWork.ShoppingCart.Get(x => x.Id == cartID);
-            cart.Count -= 1;
-            _unitofWork.ShoppingCart.Update(cart);
+            var cartFromDb = _unitofWork.ShoppingCart.Get(u => u.Id == cartID, tracked:true);
+            if (cartFromDb.Count <= 1)
+            {
+                //remove that from cart
+                HttpContext.Session.SetInt32(SD.SessionCart, _unitofWork.ShoppingCart
+                    .GetAll(u => u.ApplicationUserId == cartFromDb.ApplicationUserId).Count() - 1);
+                _unitofWork.ShoppingCart.Remove(cartFromDb);
+            }
+            else
+            {
+                cartFromDb.Count -= 1;
+                _unitofWork.ShoppingCart.Update(cartFromDb);
+            }
+
             _unitofWork.Save();
             return RedirectToAction(nameof(Index));
         }
         public IActionResult remove(int cartID)
         {
-            var cart = _unitofWork.ShoppingCart.Get(x => x.Id == cartID);
+            var cart = _unitofWork.ShoppingCart.Get(x => x.Id == cartID, tracked:true);
+            HttpContext.Session.SetInt32(SD.SessionCart, _unitofWork.ShoppingCart
+                .GetAll(u => u.ApplicationUserId == cart.ApplicationUserId).Count() - 1);
             _unitofWork.ShoppingCart.Remove(cart);
             _unitofWork.Save();
             return RedirectToAction(nameof(Index));
