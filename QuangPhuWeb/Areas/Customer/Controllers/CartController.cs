@@ -201,6 +201,7 @@ namespace QuangPhuWeb.Areas.Customer.Controllers
                     _unitofWork.OrderHeader.UpdateStatus(id, SD.StatusApproved, SD.PaymentStatusApproved);
                     _unitofWork.Save();
                 }
+                HttpContext.Session.Clear();
 
             }
             List<ShoppingCart> shoppingCart = _unitofWork.ShoppingCart
