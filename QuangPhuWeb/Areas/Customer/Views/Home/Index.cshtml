@@ -2,6 +2,15 @@
     ViewData["Title"] = "Home Page";
 }
 @model IEnumerable<Product>
+
+<style>
+    .product-image {
+        width: 100%;
+        height: 300px; /* Quy định chiều cao cố định */
+        object-fit: cover; /* Đảm bảo rằng ảnh sẽ duy trì tỷ lệ và cắt nếu cần */
+    }
+</style>
+
 <div class="row pb-3">
     @foreach (var item in Model)
     {
@@ -9,7 +18,7 @@
             <div class="row p-2">
                 <div class="col-12 p-1">
                     <div class="card border-0 p-3 shadow border-top border-5 rounded">
-                        <img src="@item.ImageUrl" class="card-img-top rounded" />
+                        <img src="@item.ImageUrl" class="card-img-top rounded product-image" />
                         <div class="pl-1">
                             <p class="card-title h5 text-dark opacity-75 text-uppercase text-center">@item.Title</p>
                             <p class="card-title text-warning text-center">by <b>@item.Author</b></p>
@@ -22,7 +31,6 @@
                                     @item.listPrice.ToString("c")
                                 </span>
                             </p>
-                            
                         </div>
                         <div class="pl-1">
                             <p class="text-dark text-opacity-75 text-center">

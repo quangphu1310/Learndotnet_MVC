@@ -46,7 +46,7 @@ namespace QuangPhu.DataAccess.DBInitializer
                     new ApplicationUser
                     {
                         Email = "admin@quangphuweb.com",
-                        UserName = "adminn@quangphuweb.com",
+                        UserName = "admin@quangphuweb.com",
                         Name = "Quang Phus",
                         PhoneNumber = "0917950600",
                         StreetAddress = "Hoa Thủy",
