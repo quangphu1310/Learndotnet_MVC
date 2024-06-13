@@ -34,5 +34,26 @@ namespace QuangPhuWeb.Areas.Admin.Controllers
             }
             return View(listUser);
         }
+        public IActionResult LockUnLock(string? userid)
+        {
+            var user = _db.ApplicationUsers.FirstOrDefault(x => x.Id == userid);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            if(user.LockoutEnd != null && user.LockoutEnd > DateTime.Now)
+            {
+                user.LockoutEnd = DateTime.Now;
+                TempData["success"] = "Unlock User Successfully";
+            }
+            else
+            {
+                user.LockoutEnd = DateTime.Now.AddYears(1000);
+                TempData["success"] = "Lock User Successfully";
+            }
+            _db.SaveChanges();
+
+            return RedirectToAction("Index");
+        }
     }
 }

@@ -49,15 +49,31 @@
                 }
                 <td>@user.Role</td>
 
-                <td>
-                    <div class="w-50 btn-group" role="group">
-                        <a asp-controller="product" asp-action="upsert" asp-route-id="@user.Id" class="btn btn-primary">
-                            <i class="bi bi-pencil-square"></i> Edit
-                        </a>
-                        <a asp-controller="product" asp-action="delete" asp-route-id="@user.Id" class="btn btn-danger">
-                            <i class="bi bi-trash3"></i> Delete
-                        </a>
-                    </div>
+                <td  width: "25%">
+                    @if(user.LockoutEnd > DateTime.Now)
+                    {
+                        <div class="text-center">
+                            <a asp-action="LockUnLock" asp-route-userid="@user.Id" class="btn btn-danger text-white" style="cursor:pointer;">
+                                <i class="bi bi-lock-fill"></i>  Lock
+                            </a>
+                            <a class="btn btn-danger text-white" style="cursor:pointer;">
+                                <i class="bi bi-pencil-square"></i> Permission
+                            </a>
+                        </div>
+                    }
+                    else
+                    {
+                <div class="text-center">
+                            <a asp-action="LockUnLock" asp-route-userid="@user.Id" class="btn btn-success text-white" style="cursor:pointer;">
+                        <i class="bi bi-unlock-fill"></i>  UnLock
+                    </a>
+                    <a class="btn btn-danger text-white" style="cursor:pointer;">
+                        <i class="bi bi-pencil-square"></i> Permission
+                    </a>
+                </div>
+                    
+                    }
+
                 </td>
             </tr>
 
