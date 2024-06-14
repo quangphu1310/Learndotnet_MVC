@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -18,6 +19,7 @@ namespace QuangPhu.Models
         public string? City { get; set; }
         public string? State { get; set; }
         public string? PostalCode { get; set; }
+        [DisplayName("Company")]
         public int? CompanyId { get; set; }
         [ForeignKey(nameof(CompanyId))]
         [ValidateNever]

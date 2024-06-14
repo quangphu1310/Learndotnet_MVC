@@ -56,7 +56,7 @@
                             <a asp-action="LockUnLock" asp-route-userid="@user.Id" class="btn btn-danger text-white" style="cursor:pointer;">
                                 <i class="bi bi-lock-fill"></i>  Lock
                             </a>
-                            <a class="btn btn-danger text-white" style="cursor:pointer;">
+                            <a asp-action="RoleManagement" asp-route-userid="@user.Id" class="btn btn-danger text-white" style="cursor:pointer;">
                                 <i class="bi bi-pencil-square"></i> Permission
                             </a>
                         </div>
@@ -67,7 +67,7 @@
                             <a asp-action="LockUnLock" asp-route-userid="@user.Id" class="btn btn-success text-white" style="cursor:pointer;">
                         <i class="bi bi-unlock-fill"></i>  UnLock
                     </a>
-                    <a class="btn btn-danger text-white" style="cursor:pointer;">
+                    <a asp-action="RoleManagement" asp-route-userid="@user.Id" class="btn btn-danger text-white" style="cursor:pointer;">
                         <i class="bi bi-pencil-square"></i> Permission
                     </a>
                 </div>
