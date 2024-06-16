@@ -15,13 +15,14 @@ namespace QuangPhu.DataAccess.Data
         public DbSet<ShoppingCart> ShoppingCarts { get; set; }
         public DbSet<OrderHeader> OrderHeaders { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
+        public DbSet<ProductImage> ProductImages { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Category>().HasData(
-                new Category { Id = 1, Name = "Book", DisplayOrder=1},
-                new Category { Id = 2, Name = "Book", DisplayOrder=2},
-                new Category { Id = 3, Name = "Book", DisplayOrder=3}
+                new Category { Id = 1, Name = "Action", DisplayOrder=1},
+                new Category { Id = 2, Name = "SciFi", DisplayOrder=2},
+                new Category { Id = 3, Name = "History", DisplayOrder=3}
                 );
             modelBuilder.Entity<Product>().HasData(
                 new Product { 
@@ -34,8 +35,7 @@ namespace QuangPhu.DataAccess.Data
                     Price = 90,
                     Price50 = 85,
                     Price100 = 80,
-                    CategoryId = 1,
-                    ImageUrl = ""
+                    CategoryId = 1
                 },
                 new Product
                 {
@@ -48,8 +48,7 @@ namespace QuangPhu.DataAccess.Data
                     Price = 30,
                     Price50 = 25,
                     Price100 = 20,
-                    CategoryId = 1,
-                    ImageUrl = ""
+                    CategoryId = 1
                 },
                 new Product
                 {
@@ -62,8 +61,7 @@ namespace QuangPhu.DataAccess.Data
                     Price = 40,
                     Price50 = 35,
                     Price100 = 30,
-                    CategoryId = 1,
-                    ImageUrl = ""
+                    CategoryId = 1
                 },
                 new Product
                 {
@@ -76,8 +74,7 @@ namespace QuangPhu.DataAccess.Data
                     Price = 30,
                     Price50 = 25,
                     Price100 = 20,
-                    CategoryId = 2,
-                    ImageUrl = ""
+                    CategoryId = 2
                 },
                 new Product
                 {
@@ -90,8 +87,7 @@ namespace QuangPhu.DataAccess.Data
                     Price = 60,
                     Price50 = 55,
                     Price100 = 50,
-                    CategoryId = 2,
-                    ImageUrl = ""
+                    CategoryId = 2
                 },
                 new Product
                 {
@@ -104,8 +100,7 @@ namespace QuangPhu.DataAccess.Data
                     Price = 50,
                     Price50 = 45,
                     Price100 = 40,
-                    CategoryId = 3,
-                    ImageUrl = ""
+                    CategoryId = 3
                 }
                 );
             modelBuilder.Entity<Company>().HasData(

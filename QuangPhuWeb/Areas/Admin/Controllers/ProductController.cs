@@ -64,19 +64,19 @@ namespace QuangPhuWeb.Areas.Admin.Controllers
                     string fileName = Guid.NewGuid().ToString() + Path.GetExtension(fileData.FileName);
                     string productPath = Path.Combine(wwwRootPath, @"images\product");
 
-                    if(!string.IsNullOrEmpty(productVM.Product.ImageUrl)){
-                        string imagePath = Path.Combine(wwwRootPath, productVM.Product.ImageUrl.TrimStart('\\'));
-                        if (System.IO.File.Exists(imagePath))
-                        {
-                            System.IO.File.Delete(imagePath);
-                        }
-                    }
-                    using (var fileStream = new FileStream(Path.Combine(productPath, fileName), FileMode.Create))
-                    {
-                        fileData.CopyTo(fileStream);
-                    }
+                    //if(!string.IsNullOrEmpty(productVM.Product.ImageUrl)){
+                    //    string imagePath = Path.Combine(wwwRootPath, productVM.Product.ImageUrl.TrimStart('\\'));
+                    //    if (System.IO.File.Exists(imagePath))
+                    //    {
+                    //        System.IO.File.Delete(imagePath);
+                    //    }
+                    //}
+                    //using (var fileStream = new FileStream(Path.Combine(productPath, fileName), FileMode.Create))
+                    //{
+                    //    fileData.CopyTo(fileStream);
+                    //}
 
-                    productVM.Product.ImageUrl = @"\images\product\" + fileName;
+                    //productVM.Product.ImageUrl = @"\images\product\" + fileName;
                 }
                 if (productVM.Product.Id != 0)
                 {

@@ -32,10 +32,10 @@ namespace QuangPhu.DataAccess.Repository
                 objFromDb.Price100 = obj.Price100;
                 objFromDb.Author = obj.Author;
 
-                if (obj.ImageUrl != null)
-                {
-                    objFromDb.ImageUrl = obj.ImageUrl;
-                }
+                //if (obj.ImageUrl != null)
+                //{
+                //    objFromDb.ImageUrl = obj.ImageUrl;
+                //}
             }
         }
 
