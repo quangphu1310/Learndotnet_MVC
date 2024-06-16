@@ -48,7 +48,7 @@ namespace QuangPhuWeb.Areas.Admin.Controllers
             else
             {
                 //update
-                productVM.Product = _unitOfWork.Product.Get(u => u.Id == id);
+                productVM.Product = _unitOfWork.Product.Get(u => u.Id == id, includeProperties: "ProductImages");
                 return View(productVM);
             }
 
@@ -73,7 +73,7 @@ namespace QuangPhuWeb.Areas.Admin.Controllers
                     foreach(var file in files)
                     {
                         string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-                        string productPath = Path.Combine(wwwRootPath, @"images\product\product-" + productVM.Product.Id);
+                        string productPath = @"images\product\product-" + productVM.Product.Id;
                         string finalPath = Path.Combine(wwwRootPath, productPath);
 
                         if(!Directory.Exists(finalPath))
@@ -113,7 +113,26 @@ namespace QuangPhuWeb.Areas.Admin.Controllers
                 return View(productVM);
             }
         }
-
+        public IActionResult DeleteImage(int imageId)
+        {
+            var ImageToDelete = _unitOfWork.ProductImage.Get(x => x.Id == imageId);
+            int productID = ImageToDelete.ProductId;
+            if(ImageToDelete != null)
+            {
+                if(!String.IsNullOrEmpty(ImageToDelete.ImageUrl))
+                {
+                    var oldImagePath = 
+                        Path.Combine(_webHostEnvironment.WebRootPath, ImageToDelete.ImageUrl.TrimStart('\\'));
+                    if(System.IO.File.Exists(oldImagePath))
+                    {
+                        System.IO.File.Delete(oldImagePath);
+                    }
+                }
+                _unitOfWork.ProductImage.Remove(ImageToDelete);
+                _unitOfWork.Save();
+            }
+            return RedirectToAction(nameof(Upsert), new {id= productID});
+        }
 
         public IActionResult Delete(int? id)
         {
@@ -136,6 +155,17 @@ namespace QuangPhuWeb.Areas.Admin.Controllers
             if (obj == null)
             {
                 return NotFound();
+            }
+            string productPath = @"images\product\product-" + id;
+            string finalPath = Path.Combine(_webHostEnvironment.WebRootPath, productPath);
+
+            if (Directory.Exists(finalPath))
+            {
+                string[] finalPaths = Directory.GetFiles(finalPath);
+                foreach(var path in finalPaths) { 
+                    System.IO.File.Delete(path);
+                }
+                Directory.Delete(finalPath);
             }
             _unitOfWork.Product.Remove(obj);
             _unitOfWork.Save();
