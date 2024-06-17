@@ -30,9 +30,11 @@ namespace QuangPhuWeb.Areas.Customer.Controllers
                 ShoppingCartList = _unitofWork.ShoppingCart.GetAll(x => x.ApplicationUserId == userId, includeProperties: "Product"),
                 OrderHeader = new()
             };
+            var productImages = _unitofWork.ProductImage.GetAll().ToList();
 
             foreach( var cart in ShoppingCartVM.ShoppingCartList )
             {
+                cart.Product.ProductImages = productImages.Where(x=>x.ProductId == cart.Product.Id).ToList();
                 cart.Price = GetCartPrice(cart);
                 ShoppingCartVM.OrderHeader.OrderTotal += cart.Price * cart.Count;
             }

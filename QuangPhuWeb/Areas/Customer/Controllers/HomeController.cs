@@ -24,14 +24,14 @@ namespace QuangPhuWeb.Areas.Customer.Controllers
 
         public IActionResult Index()
         {
-            List<Product> objProductList = _unitOfWork.Product.GetAll(includeProperties: "Category").ToList();
+            List<Product> objProductList = _unitOfWork.Product.GetAll(includeProperties: "Category,ProductImages").ToList();
 
             return View(objProductList);
         }
         public IActionResult Details(int productId)
         {
             ShoppingCart cart = new() {
-                Product = _unitOfWork.Product.Get(x => x.Id == productId, includeProperties: "Category"),
+                Product = _unitOfWork.Product.Get(x => x.Id == productId, includeProperties: "Category,ProductImages"),
                 Count = 1,
                 ProductId = productId
             };
