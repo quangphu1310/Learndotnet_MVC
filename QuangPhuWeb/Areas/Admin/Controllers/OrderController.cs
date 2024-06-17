@@ -40,16 +40,16 @@ namespace QuangPhuWeb.Areas.Admin.Controllers
             switch (status)
             {
                 case "pending":
-                    objOrderHeaders = objOrderHeaders.Where(x => x.PaymentStatus == SD.PaymentStatusPending).ToList();
+                    objOrderHeaders = objOrderHeaders.Where(x => x.PaymentStatus == SD.PaymentStatusDelayedPayment).ToList();
                     break;
                 case "inprocess":
-                    objOrderHeaders = objOrderHeaders.Where(x => x.PaymentStatus == SD.StatusInProcess).ToList();
+                    objOrderHeaders = objOrderHeaders.Where(x => x.OrderStatus == SD.StatusInProcess).ToList();
                     break;
                 case "completed":
-                    objOrderHeaders = objOrderHeaders.Where(x => x.PaymentStatus == SD.StatusShipped).ToList();
+                    objOrderHeaders = objOrderHeaders.Where(x => x.OrderStatus == SD.StatusShipped).ToList();
                     break;
                 case "approved":
-                    objOrderHeaders = objOrderHeaders.Where(x => x.PaymentStatus == SD.StatusApproved).ToList();
+                    objOrderHeaders = objOrderHeaders.Where(x => x.OrderStatus == SD.StatusApproved).ToList();
                     break;
                 default:
                     break;
