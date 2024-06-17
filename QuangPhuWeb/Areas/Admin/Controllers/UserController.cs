@@ -18,28 +18,28 @@ namespace QuangPhuWeb.Areas.Admin.Controllers
 
     public class UserController : Controller
     {
-        private readonly ApplicationDbContext _db;
+        private IUnitOfWork _unitOfWork;
         private readonly UserManager<IdentityUser> _userManager;
-        public UserController(ApplicationDbContext db, UserManager<IdentityUser> userManager)
+        private readonly RoleManager<IdentityRole> _roleManager;
+
+        public UserController(ApplicationDbContext db, UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, IUnitOfWork unitOfWork)
         {
-            _db = db;
+            _unitOfWork = unitOfWork;
             _userManager = userManager;
+            _roleManager = roleManager;
         }
         public IActionResult Index()
         {
-            var userRole = _db.UserRoles.ToList();
-            var role = _db.Roles.ToList();
-            var listUser = _db.ApplicationUsers.Include(x => x.Company).ToList();
+            var listUser = _unitOfWork.ApplicationUser.GetAll(includeProperties:"Company").ToList();
             foreach (var user in listUser)
             {
-                var userRoleId = userRole.FirstOrDefault(x => x.UserId == user.Id).RoleId;
-                user.Role = role.FirstOrDefault(x => x.Id == userRoleId).Name;
+                user.Role = _userManager.GetRolesAsync(user).GetAwaiter().GetResult().FirstOrDefault();
             }
             return View(listUser);
         }
         public IActionResult LockUnLock(string? userid)
         {
-            var user = _db.ApplicationUsers.FirstOrDefault(x => x.Id == userid);
+            var user = _unitOfWork.ApplicationUser.Get(x => x.Id == userid);
             if (user == null)
             {
                 return NotFound();
@@ -54,28 +54,28 @@ namespace QuangPhuWeb.Areas.Admin.Controllers
                 user.LockoutEnd = DateTime.Now.AddYears(1000);
                 TempData["success"] = "Lock User Successfully";
             }
-            _db.SaveChanges();
+            _unitOfWork.ApplicationUser.Update(user);
+            _unitOfWork.Save();
 
             return RedirectToAction("Index");
         }
         public IActionResult RoleManagement(string? userid)
         {
-            string roleID = _db.UserRoles.FirstOrDefault(x => x.UserId == userid).RoleId;
             UserVM userVM = new UserVM
             {
-                ApplicationUser = _db.ApplicationUsers.Include(x => x.Company).FirstOrDefault(x => x.Id == userid),
-                RoleList = _db.Roles.Select(x => new SelectListItem
+                ApplicationUser = _unitOfWork.ApplicationUser.Get(x => x.Id == userid, includeProperties: "Company"),
+                RoleList = _roleManager.Roles.Select(x => new SelectListItem
                 {
                     Text = x.Name,
                     Value = x.Name
                 }),
-                CompanyList = _db.Companys.Select(x => new SelectListItem
+                CompanyList = _unitOfWork.Company.GetAll().Select(x => new SelectListItem
                 {
                     Text = x.Name,
                     Value = x.Id.ToString()
                 }),
             };
-            userVM.ApplicationUser.Role = _db.Roles.FirstOrDefault(x => x.Id == roleID).Name;
+            userVM.ApplicationUser.Role = _userManager.GetRolesAsync(userVM.ApplicationUser).GetAwaiter().GetResult().FirstOrDefault();
             return View(userVM);
         }
 
@@ -83,13 +83,13 @@ namespace QuangPhuWeb.Areas.Admin.Controllers
         public IActionResult RoleManagement(UserVM roleManagmentVM)
         {
 
-            string RoleID = _db.UserRoles.FirstOrDefault(u => u.UserId == roleManagmentVM.ApplicationUser.Id).RoleId;
-            string oldRole = _db.Roles.FirstOrDefault(u => u.Id == RoleID).Name;
+            string oldRole = _userManager.GetRolesAsync(_unitOfWork.ApplicationUser.Get(x=>x.Id == roleManagmentVM.ApplicationUser.Id)).GetAwaiter().GetResult().FirstOrDefault();
+
+            ApplicationUser applicationUser = _unitOfWork.ApplicationUser.Get(u => u.Id == roleManagmentVM.ApplicationUser.Id);
 
             if (!(roleManagmentVM.ApplicationUser.Role == oldRole))
             {
                 //a role was updated
-                ApplicationUser applicationUser = _db.ApplicationUsers.FirstOrDefault(u => u.Id == roleManagmentVM.ApplicationUser.Id);
                 if (roleManagmentVM.ApplicationUser.Role == SD.Role_Company)
                 {
                     applicationUser.CompanyId = roleManagmentVM.ApplicationUser.CompanyId;
@@ -98,11 +98,20 @@ namespace QuangPhuWeb.Areas.Admin.Controllers
                 {
                     applicationUser.CompanyId = null;
                 }
-                _db.SaveChanges();
+                _unitOfWork.ApplicationUser.Update(applicationUser);
+                _unitOfWork.Save();
 
                 _userManager.RemoveFromRoleAsync(applicationUser, oldRole).GetAwaiter().GetResult();
                 _userManager.AddToRoleAsync(applicationUser, roleManagmentVM.ApplicationUser.Role).GetAwaiter().GetResult();
 
+            }
+            else
+            {
+                if(oldRole == SD.Role_Company && applicationUser.CompanyId != roleManagmentVM.ApplicationUser.CompanyId) {
+                    applicationUser.CompanyId = roleManagmentVM.ApplicationUser.CompanyId;
+                    _unitOfWork.ApplicationUser.Update(applicationUser);
+                    _unitOfWork.Save();
+                }
             }
             TempData["success"] = "Permission successfully";
 
