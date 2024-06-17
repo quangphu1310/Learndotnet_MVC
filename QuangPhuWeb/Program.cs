@@ -34,6 +34,11 @@ builder.Services.AddAuthentication()
     {
         options.ClientId = "270940116231-icht7uglkap3t05tlgmoqaudohb8895m.apps.googleusercontent.com";
         options.ClientSecret = "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";
+    })
+    .AddMicrosoftAccount(options =>
+    {
+        options.ClientId = "3cdda48e-9acb-40d5-8c00-70fdb2750d6a";
+        options.ClientSecret = "ZJk8Q~NkiN.FDisCeMSeOvOkRIIR6lkDeLxX5bw5";
     });
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options => {
